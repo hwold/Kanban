@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Atividades</title>
+    <!-- Link para o arquivo CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<header>
+<!-- Cabeçalho com Botões -->
+<div class="header">
+    <div class="buttons">
+        <button id="add-task-btn">Adicionar</button>
+        <button id="toggle-delete-btn">Excluir</button>
+        <button id="toggle-copy-btn">Copiar</button>
+        <div >
+            <input  type="text" id="search-input" placeholder="Buscar">
+        </div>
+    </div>
+    <!-- <div class="filter-container">
+        <input type="text" id="search-input" placeholder="Buscar">
+    </div> -->
+    <h1>Atividades</h1>
+</div>
+</header>
+
+
+<div class="kanban-board">
+    <div class="kanban-column" id="Backlog">
+        <h2>Backlog (<span id="Backlog-count">0</span>)</h2>
+    </div>
+    <div class="kanban-column" id="todo">
+        <h2>To Do (<span id="todo-count">0</span>)</h2>
+    </div>
+    <div class="kanban-column" id="doing">
+        <h2>Doing (<span id="doing-count">0</span>)</h2>
+    </div>
+    <!-- <div class="kanban-column" id="waiting">
+        <h2>Waiting</h2>
+    </div> -->
+    <div class="kanban-column" id="done">
+        <h2>Done (<span id="done-count">0</span>)</h2>
+    </div>
+</div>
+
+<!-- Modal de criação de nova tarefa -->
+<div class="modal" id="create-modal">
+    <div class="modal-content" id="modal-content">
+        <div id="modal-header" class="modal-header">
+            <h3>Criar Nova Tarefa</h3>
+        </div>
+        <label for="create-title">Título:</label>
+        <input type="text" id="create-title">
+
+        <label for="create-description">Descrição:</label>
+        <textarea id="create-description" rows="4"></textarea>
+
+        <div>
+            <label for="bullet-input">Pontos da Tarefa:</label>
+            <input type="text" id="bullet-input" placeholder="Escreva um ponto e aperte Enter" />
+            <ol id="bullet-list">
+            <!-- Aqui os bullet points serão inseridos -->
+            </ol>
+        </div>
+
+        <label for="create-prazo">Prazo:</label>
+        <input type="date" id="create-prazo">
+
+        <label for="create-responsavel">Responsável:</label>
+        <select id="create-responsavel">
+            <option value="TBD">TBD</option>
+            <option value="Alan">Alan</option>
+            <option value="Bianca">Bianca</option>
+            <option value="Bruno">Bruno</option>
+            <option value="Caio">Caio</option>
+            <option value="Carlos">Carlos</option>
+            <option value="Daniela">Daniela</option>
+            <option value="Evie">Evie</option>
+            <option value="Felipe">Felipe</option>
+            <option value="Gabriel">Gabriel</option>
+            <option value="Harald">Harald</option>
+            <option value="Marcos">Marcos</option>
+            <option value="Sandra">Sandra</option>
+        </select>
+
+        <label for="create'-status"></label>
+        <select id="create-status">
+            <option value="Backlog">Backlog</option>
+            <option value="todo">To Do</option>
+            <option value="doing">Doing</option>
+            <option value="waiting">Waiting</option>
+            <option value="done">Done</option>
+        </select>
+
+        <label for="create">Importante: </label>
+        <input type="checkbox" id="create-important">
+
+        <button id="create-btn">Criar</button>
+        <button class="cancel-btn" id="create-cancel-btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Modal de edição -->
+<div class="modal" id="edit-modal">
+    <div class="modal-content" id="modal-edit">
+        <div id="edit-header" class="modal-header">
+            <h3>Editar Atividade</h3>
+        </div>
+        <!-- <label for="edit-title">Título:</label>
+        <input type="text" id="edit-title"> -->
+        
+        <label for="edit-title">Título:</label>
+        <textarea id="edit-title" rows="2"></textarea>
+
+        <label for="edit-description">Descrição:</label>
+        <textarea id="edit-description" rows="4"></textarea>
+
+        <label for="edit-bullet-input">Pontos da Tarefa:</label>
+        <input type="text" id="edit-bullet-input" placeholder="Escreva um ponto e aperte Enter" />
+        <ol id="edit-bullet-list"></ol>
+
+        <label for="edit-prazo">Prazo:</label>
+        <input type="date" id="edit-prazo">
+
+        <label for="edit-responsavel">Responsável:</label>
+        <select id="edit-responsavel">
+            <option value="TBD">TBD</option>
+            <option value="Alan">Alan</option>
+            <option value="Bianca">Bianca</option>
+            <option value="Bruno">Bruno</option>
+            <option value="Caio">Caio</option>
+            <option value="Carlos">Carlos</option>
+            <option value="Daniela">Daniela</option>
+            <option value="Evie">Evie</option>
+            <option value="Felipe">Felipe</option>
+            <option value="Gabriel">Gabriel</option>
+            <option value="Harald">Harald</option>
+            <option value="Marcos">Marcos</option>
+            <option value="Sandra">Sandra</option>
+        </select>
+
+        <label for="edit-status">Status:</label>
+        <select id="edit-status">
+            <option value="Backlog">Backlog</option>
+            <option value="todo">To Do</option>
+            <option value="doing">Doing</option>
+            <option value="waiting">Waiting</option>
+            <option value="done">Done</option>
+        </select>
+
+        <label for="edit-important">Importante: </label>
+        <input type="checkbox" id="edit-important">
+
+        <button id="save-btn">Salvar</button>
+        <button class="cancel-btn" id="cancel-btn">Cancelar</button>
+    </div>
+</div>
+
+<!-- Script principal -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        let atividades = [];
+        let atividadeAtual = null;
+
+        // Função para carregar atividades do servidor
+        function carregarAtividades() {
+            fetch('/atividades')
+                .then(response => response.json())
+                .then(data => {
+                    atividades = data;
+                    distribuirCards();
+                    adicionarEventoCopiar();
+                })
+                .catch(error => console.error('Erro ao carregar atividades:', error));
+        }
+
+        // Função para salvar atividades no servidor
+        function salvarAtividades() {
+            fetch('/atividades', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(atividades)  // Converte as atividades para JSON
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao salvar atividades');
+                }
+                return response.json();  // Tenta converter a resposta para JSON
+            })
+            .then(data => {
+                console.log(data.message);  // Mostra a mensagem de sucesso
+            })
+            .catch(error => {
+                console.error('Erro ao salvar atividades:', error);
+            });
+        }
+
+        // Função para formatar a data no formato dd/mm/yyyy
+        function formatarData(data) {
+            const partes = data.split('-');
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;  // Retorna no formato dd-mm-yyyy
+        }
+
+        // Função para verificar o prazo de cada tarefa
+        function verificarPrazo(atividade) {
+            const hoje = new Date();
+            const dataHoje = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+            const prazo = new Date(atividade.prazo);
+            const dataPrazo = new Date(prazo.getFullYear(), prazo.getMonth(), prazo.getDate());
+            const diferencaDias = Math.round((dataPrazo - dataHoje) / (1000 * 60 * 60 * 24));
+
+            if (atividade.status === 'done') return 'ok';
+            if (atividade.status === 'Backlog') return 'backlog';
+            if (diferencaDias < -1) return 'vencida';
+            if (diferencaDias < 0) return 'hoje';
+            if (diferencaDias < 2) return 'proximo';
+            return 'ok';
+        }
+
+        // Função para ordenar atividades por data de prazo
+        function ordenarAtividadesPorPrazo(atividades) {
+            return atividades.sort((a, b) => {
+                if(a.progresso === true && b.progresso === false) return -1;
+                if(a.progresso === false && b.progresso === true) return 1;
+                const prazoA = new Date(a.prazo);
+                const prazoB = new Date(b.prazo);
+                return prazoA - prazoB;  // Ordena da menor para a maior data
+            });
+        }
+
+        function calcularDias(atividade) {
+            const dataCriacao = new Date(atividade.dataCriacao);
+            const hoje = new Date();
+            
+            // Função auxiliar para remover as horas, minutos e segundos das datas
+            function ajustarData(data) {
+                return new Date(data.getFullYear(), data.getMonth(), data.getDate());
+            }
+
+            const dataCriacaoAjustada = ajustarData(dataCriacao);
+            const hojeAjustada = ajustarData(hoje);
+            
+            // Verifica se a tarefa está concluída
+            if (atividade.status === 'done' && atividade.dataConclusao) {
+                const dataConclusao = new Date(atividade.dataConclusao);
+                const dataConclusaoAjustada = ajustarData(dataConclusao);
+
+                // Calcula a diferença em dias (sem arredondamento)
+                const diferencaDias = Math.round((dataConclusao - dataCriacao) / (1000 * 60 * 60 * 24));
+
+                // Se a diferença for 0 dias, retorna "Concluído hoje"
+                if (diferencaDias == 0) {
+                    return "Concluído hoje";
+                }
+                if (diferencaDias == 1) {
+                    return "Concluído em 1 dia"
+                }
+
+                return `Concluído em ${diferencaDias} dias`;
+            } else {
+                // Calcula os dias em andamento (data de hoje - data de criação)
+                const diferencaDias = Math.round((hojeAjustada - dataCriacao) /  (1000 * 60 * 60 * 24));
+
+                // Se a diferença for 0 dias, retorna "Iniciado hoje"
+                if (diferencaDias == 0) {
+                    return "Iniciado hoje";
+                }
+
+                if (diferencaDias == 1) {
+                    return `${diferencaDias} dia em andamento`;
+                }
+
+                return `${diferencaDias} dias em andamento`;
+            }
+        }
+
+        function criarCard(atividade) {
+            // const statusPrazo = verificarPrazo(atividade);  // Verifica o status do prazo da tarefa
+            // let classePrazo = statusPrazo;
+
+            // if (statusPrazo === 'vencida') {
+            //     classePrazo = 'vencida';
+            // } else if (statusPrazo === 'proximo') {
+            //     classePrazo = 'proximo';
+            // } else if (statusPrazo === 'hoje') {
+            //     classePrazo = 'hoje';
+            // }
+
+            
+            if (atividade.progresso) {
+                classeImportante = 'border-top: red 4px solid';
+            
+            } else  {
+                classeImportante = '';
+            }
+             
+            let bulletPointsHTML = '';
+            if (atividade.bullet && atividade.bullet.length > 0) {
+            bulletPointsHTML = '<ol>';
+            atividade.bullet.forEach(point => {
+                let icon = '';  // Variável para o ícone
+                if (point.includes('#')) {
+                    icon = `<li><s> ${point}</s></li>`;  // Ícone para concluído
+                } else {
+                    icon = `<li>${point}</li>`;  // Outro ícone, pode ajustar conforme desejar
+                }
+                bulletPointsHTML += `${icon}`;  // Inclui o ícone e o texto do bullet
+            });
+            bulletPointsHTML += '</ol>';
+            }
+
+            return `
+                <div class="card ${atividade.status}" data-id="${atividade.id}" draggable="true" style="${classeImportante}"   ">
+                    <p class="card-title"><strong>Atividade: ${atividade.titulo}</strong></p>
+                    <p class="card-description"><strong>Descrição:</strong> ${atividade.descricao}</p>
+                    ${bulletPointsHTML}
+                    <p><strong>Responsável:</strong> ${atividade.responsavel}</p>
+                    <p><strong>Prazo:</strong> ${formatarData(atividade.prazo)} - ${calcularDias(atividade)}</p>
+                    <button class="copy-btn" style="display: none;">Copiar</button>
+                    <button  class="delete-btn" style="display: none;">Excluir</button>
+                </div>
+            `;
+        }
+
+        // Função para distribuir cards nas colunas corretas
+        function distribuirCards() {
+            // Seleciona as colunas
+            const backlogColuna = document.getElementById('Backlog');
+            const todoColuna = document.getElementById('todo');
+            const doingColuna = document.getElementById('doing');
+            // const waitingColuna = document.getElementById('waiting');
+            const doneColuna = document.getElementById('done');
+
+            // Limpar apenas os cards existentes
+            backlogColuna.querySelectorAll('.card').forEach(card => card.remove());
+            todoColuna.querySelectorAll('.card').forEach(card => card.remove());
+            doingColuna.querySelectorAll('.card').forEach(card => card.remove());
+            // waitingColuna.querySelectorAll('.card').forEach(card => card.remove());
+            doneColuna.querySelectorAll('.card').forEach(card => card.remove());
+
+                // Ordenar as atividades por data de prazo
+            const atividadesOrdenadas = ordenarAtividadesPorPrazo(atividades);
+
+            // Agora, adicionar os novos cards
+            atividadesOrdenadas.forEach(atividade => {
+                const coluna = document.getElementById(atividade.status);
+                coluna.innerHTML += criarCard(atividade);
+            });
+            atualizarContagemTarefas();
+            adicionarEventosDragAndDrop();
+            adicionarEventoEdicao();
+            adicionarEventoExclusao();
+        }
+
+        // Função para mostrar uma mensagem de sucesso
+        function mostrarMensagemSucesso(texto) {
+            const mensagem = document.createElement('div');
+            mensagem.classList.add('mensagem-sucesso');
+            mensagem.textContent = texto;
+            document.body.appendChild(mensagem);
+            setTimeout(() => mensagem.remove(), 3000);
+        }
+
+        // Função para adicionar eventos de exclusão
+        function adicionarEventoExclusao() {
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    const cardId = e.target.closest('.card').getAttribute('data-id');
+                    atividades = atividades.filter(atividade => atividade.id != cardId);
+                    distribuirCards();
+                    salvarAtividades();
+                    mostrarMensagemSucesso('Tarefa excluída com sucesso!');
+                });
+            });
+        }
+
+        // Alterna visibilidade dos botões de excluir
+        document.getElementById('toggle-delete-btn').addEventListener('click', () => {
+            document.querySelectorAll('.delete-btn').forEach(button => {
+                button.style.display = (button.style.display === 'none') ? 'inline' : 'none';
+            });
+        });
+
+        document.getElementById('toggle-copy-btn').addEventListener('click', () => {
+            document.querySelectorAll('.copy-btn').forEach(button => {
+                button.style.display = (button.style.display === 'none') ? 'inline' : 'none';
+            });
+        });
+
+        // Função para adicionar eventos de drag and drop
+        function adicionarEventosDragAndDrop() {
+            const cards = document.querySelectorAll('.card');
+            const columns = document.querySelectorAll('.kanban-column');
+
+            // Adiciona eventos de arrastar para os cards
+            cards.forEach(card => {
+                card.addEventListener('dragstart', () => card.classList.add('dragging'));
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+            });
+
+                // Adiciona eventos de drop nas colunas
+                columns.forEach(column => {
+                    column.addEventListener('dragover', (e) => e.preventDefault());
+                    column.addEventListener('dragleave', () => column.classList.remove('over'));
+                    column.addEventListener('drop', (e) => {
+                        e.preventDefault();
+                        
+                        const card = document.querySelector('.dragging');
+                        if (!card) return;  // Verifica se o card está sendo arrastado
+                        
+                        column.appendChild(card);  // Move o card para a nova coluna
+                        card.classList.remove('dragging');
+
+                        const cardId = card.getAttribute('data-id');
+                        const atividade = atividades.find(a => a.id == cardId);
+
+                        // Atualiza o status da atividade
+                        atividade.status = column.id;
+
+                        // Se o card foi movido para "Done", salva a data de conclusão
+                        if (column.id === 'done') {
+                            atividade.dataConclusao = new Date().toISOString().split('T')[0]; // Salva a data de conclusão
+                        }
+
+                        // Reaplicar a ordenação e redistribuir os cards
+                        distribuirCards();
+                        adicionarEventoCopiar();
+
+                        // Salva as alterações no armazenamento
+                        salvarAtividades();
+                        
+                        // Mostra a mensagem de sucesso
+                        mostrarMensagemSucesso('Tarefa movida com sucesso!');
+                    });
+                });
+            }
+
+        // Função para adicionar eventos de edição
+        function adicionarEventoEdicao() {
+            document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.getAttribute('data-id');
+                const atividadeAtual = atividades.find(atividade =>  atividade.id == id);
+                console.log("Atividade Atual:", atividadeAtual);
+            document.getElementById('edit-modal').setAttribute('data-id', atividadeAtual.id);  // Define o ID da atividade no modal
+            // Verifique se os bullet points estão presentes
+            // Preencher os outros campos do modal
+            document.getElementById('edit-title').value = atividadeAtual.titulo;
+            document.getElementById('edit-description').value = atividadeAtual.descricao;
+            document.getElementById('edit-responsavel').value = atividadeAtual.responsavel;
+            document.getElementById('edit-prazo').value = atividadeAtual.prazo;
+            document.getElementById('edit-status').value = atividadeAtual.status;
+            document.getElementById('edit-important').checked = atividadeAtual.progresso;
+
+            
+            // Limpa a lista de bullet points no modal
+            const bulletList = document.getElementById("edit-bullet-list");
+            bulletList.innerHTML = "";  // Limpa a lista atual
+            // Verifica se há bullet points e os carrega no modal
+            if (atividadeAtual.bullet && atividadeAtual.bullet.length > 0) {
+                atividadeAtual.bullet.forEach(point => {
+                    const li = document.createElement("li");
+                    li.textContent = point;  // Define o conteúdo do bullet point
+                    bulletList.appendChild(li);  // Adiciona o item à lista
+                    console.log("Adicionando Bullet Point:", point);
+                });
+            }
+            // Exibe o modal de edição
+            document.getElementById('edit-modal').style.display = 'flex';
+            carregarBulletsEditModal(atividadeAtual.bullet);
+        });
+        });
+        }
+        // Função para salvar a atividade após edição
+        document.getElementById('save-btn').addEventListener('click', () => {
+            const id = document.getElementById('edit-modal').getAttribute('data-id');  // Supondo que o título contém o ID
+            const atividadeAtual = atividades.find(atividade =>  atividade.id == id);
+            console.log("Atividade Atual:", atividadeAtual);
+
+
+            atividadeAtual.titulo = document.getElementById('edit-title').value;
+            atividadeAtual.descricao = document.getElementById('edit-description').value;
+            atividadeAtual.responsavel = document.getElementById('edit-responsavel').value;
+            atividadeAtual.prazo = document.getElementById('edit-prazo').value;
+            atividadeAtual.status = document.getElementById('edit-status').value;
+            atividadeAtual.progresso = document.getElementById('edit-important').checked;
+            // Captura os bullet points do modal de edição
+            atividadeAtual.bullet = Array.from(document.querySelectorAll("#edit-bullet-list li")).map(item => item.textContent).filter(bullet => bullet.trim() !== "");
+            // Redistribui os cards e salva as alterações
+            distribuirCards();
+            adicionarEventoCopiar();
+            salvarAtividades();
+            // carrega atividades
+
+            // Fecha o modal de edição
+
+            document.getElementById('edit-modal').style.display = 'none';
+            // Exibe uma mensagem de sucesso
+            mostrarMensagemSucesso('Tarefa editada com sucesso!');
+        });
+        // Chama a função para adicionar eventos de edição
+        adicionarEventoEdicao();
+        // Função para adicionar evento de criação de tarefas
+        function adicionarEventoCriacao() {
+            
+            document.getElementById('add-task-btn').addEventListener('click', () => {
+                document.getElementById('create-title').value = '';
+                document.getElementById('create-description').value = '';
+                document.getElementById('create-responsavel').value ;  // Pode ajustar conforme seu padrão
+                document.getElementById('create-prazo').value = '';
+                document.getElementById('create-status').value;
+                document.getElementById('create-important').checked = false;
+                document.getElementById('bullet-input').value = '';
+                document.getElementById('create-modal').style.display = 'flex';
+            });
+            document.getElementById('create-btn').addEventListener('click', () => {
+                const titulo = document.getElementById('create-title').value;
+                const descricao = document.getElementById('create-description').value;
+                const responsavel = document.getElementById('create-responsavel').value;
+                const prazo = document.getElementById('create-prazo').value;
+                const status = document.getElementById('create-status').value;
+                const important = document.getElementById('create-important').checked;
+                const dataCriacao = new Date().toISOString().split('T')[0]; // Salva a data de criação
+                const bulletPoints = Array.from(document.querySelectorAll('#bullet-list li')).map(item => item.textContent);
+                const novoId = atividades.length ? Math.max(...atividades.map(a => a.id)) + 1 : 1;
+                if (titulo && descricao && responsavel && prazo) {
+                    const novaAtividade = {
+                        id: atividades.length + 1,
+                        titulo,
+                        descricao,
+                        responsavel,
+                        prazo,
+                        status,
+                        progresso: important,
+                        dataCriacao: dataCriacao,
+                        dataConclusao: null,
+                        bullet: bulletPoints,
+                    };
+
+                    atividades.push(novaAtividade);
+                    distribuirCards();
+                    adicionarEventoCopiar();
+                    salvarAtividades();
+                    document.getElementById('create-modal').style.display = 'none';
+                    mostrarMensagemSucesso('Tarefa criada com sucesso!');
+                }
+            });
+
+            document.getElementById('create-cancel-btn').addEventListener('click', () => {
+                document.getElementById('create-modal').style.display = 'none';
+            });
+
+            document.getElementById('cancel-btn').addEventListener('click', () => {
+                document.getElementById('edit-modal').style.display = 'none';
+            });
+        }
+        // Função para tornar o modal arrastável
+        function makeModalDraggable(modal, header) {
+        let offsetX = 0, offsetY = 0, initialX = 0, initialY = 0;
+        header.onmousedown = function(e) {
+            e.preventDefault();
+            // Pega a posição inicial do cursor
+            initialX = e.clientX;
+            initialY = e.clientY;
+            document.onmousemove = dragModal;
+            document.onmouseup = stopDragging;
+        };
+        function dragModal(e) {
+            e.preventDefault();
+            // Calcula a nova posição do modal
+            offsetX = initialX - e.clientX;
+            offsetY = initialY - e.clientY;
+            initialX = e.clientX;
+            initialY = e.clientY;
+            // Define a nova posição do modal
+            modal.style.top = (modal.offsetTop - offsetY) + "px";
+            modal.style.left = (modal.offsetLeft - offsetX) + "px";
+        }
+        function stopDragging() {
+            document.onmousemove = null;
+            document.onmouseup = null;
+        }
+        }
+        // Chama a função de arrastar o modal
+        const modal = document.getElementById('modal-content');
+        const header = document.getElementById('modal-header');
+        makeModalDraggable(modal, header);
+        const modaledit = document.getElementById('modal-edit');
+        const headeredit = document.getElementById('edit-header');
+        makeModalDraggable(modaledit, headeredit);
+        // Função para filtrar cards com base no título ou descrição
+        function filterCards() {
+        // Captura o valor digitado no campo de busca e converte para minúsculo
+        let searchValue = document.getElementById('search-input').value.toLowerCase();
+        // Seleciona todos os cards nas colunas do Kanban
+        let cards = document.querySelectorAll('.card');
+        // Percorre todos os cards
+        cards.forEach(function(card) {
+            // Seleciona o título e a descrição do card
+            let cardTitle = card.querySelector('.card-title').innerText.toLowerCase();
+            let cardDescription = card.querySelector('.card-description').innerText.toLowerCase();
+            // Verifica se o termo de busca está presente no título ou descrição
+            if (cardTitle.includes(searchValue) || cardDescription.includes(searchValue)) {
+                // Exibe o card se corresponder à busca
+                card.style.display = "block";
+            } else {
+                // Oculta o card se não corresponder
+                card.style.display = "none";
+            }
+        });
+        }
+
+        document.getElementById("bullet-input").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            const bulletInput = document.getElementById("bullet-input");
+            const bulletList = document.getElementById("bullet-list");
+            // Cria um novo item da lista
+            const li = document.createElement("li");
+            li.textContent = bulletInput.value;
+            bulletList.appendChild(li);
+            // Limpa o campo de input
+            bulletInput.value = "";
+            // Impede o comportamento padrão do Enter
+            event.preventDefault();
+        }
+        });
+
+        document.getElementById("edit-bullet-input").addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            const bulletInput = document.getElementById("edit-bullet-input");
+            const bulletList = document.getElementById("edit-bullet-list");
+            // Cria um novo item da lista
+            const li = document.createElement("li");
+            li.textContent = bulletInput.value;
+            bulletList.appendChild(li);
+            // Limpa o campo de input
+            bulletInput.value = "";
+            // Impede o comportamento padrão do Enter
+            event.preventDefault();
+        }
+        });
+        // Adiciona um evento de 'input' para acionar o filtro conforme o usuário digita
+        document.getElementById('search-input').addEventListener('input', filterCards);
+        // Inicialização
+
+        // Função para adicionar bullet no modal de criação e edição
+        function adicionarBullet(texto, bulletList) {
+        const li = document.createElement('li');
+        li.classList.add('bullet-item');  // Adiciona uma classe para estilizar via CSS
+        // Cria um span para o texto do bullet
+        const bulletText = document.createElement('span');
+        bulletText.textContent = texto;
+        bulletText.classList.add('bullet-text');  // Classe para o texto
+        // Adiciona o botão de remover ao lado de cada bullet
+        const deleteButton = document.createElement('checkbox');
+
+        // Evita que o clique no botão remova o texto do bullet
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation(); // Para evitar conflitos com o evento de clique
+            li.remove();  // Remove o bullet ao clicar no botão de remoção
+        });
+
+        // Adiciona o evento de duplo clique para editar o bullet
+        bulletText.addEventListener('click', () => {
+            const editInput = document.createElement('input');
+            editInput.type = 'text';
+            editInput.value = bulletText.textContent;  // Usa o valor original do texto
+            li.textContent = '';  
+            li.appendChild(editInput);
+            editInput.focus();
+            editInput.addEventListener('blur', () => {
+                bulletText.textContent = editInput.value;
+                li.textContent = '';
+                li.appendChild(bulletText);  
+            });
+        });
+
+        // Adiciona o botão e o texto ao `li`
+        li.appendChild(bulletText);
+        bulletList.appendChild(li);
+        }
+        // Evento para capturar o ENTER e adicionar bullet
+        document.getElementById('bullet-input').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            const bulletList = document.getElementById('bullet-list');
+            adicionarBullet(this.value, bulletList);
+            this.value = '';  // Limpa o input após adicionar o bullet
+        }
+        });
+        // Função para carregar os bullets ao abrir o modal de edição
+        function carregarBulletsEditModal(bullets) {
+        const bulletList = document.getElementById('edit-bullet-list');
+        bulletList.innerHTML = '';  // Limpa a lista de bullets antes de carregar
+        if (bullets && bullets.length > 0) {
+            bullets.forEach(point => {
+                adicionarBullet(point, bulletList);  // Adiciona cada bullet ao modal de edição
+            });
+        }
+        }
+        // função para copiar o conteúdo do card	
+        function adicionarEventoCopiar() {
+        const copyButtons = document.querySelectorAll('.copy-btn');
+        copyButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.stopPropagation(); // Para evitar conflitos com o evento de clique
+                const cardElement = e.target.closest('.card'); // Seleciona o card ao qual o botão pertence
+                const cardContent = cardElement.innerText; // Pega o texto do card
+                copiarParaAreaDeTransferencia(cardContent); // Chama a função de cópia
+                mostrarMensagemSucesso('Conteúdo copiado!');
+            });
+        });
+        }
+        function copiarParaAreaDeTransferencia(conteudo) {
+        // Remove múltiplas quebras de linha
+        const conteudoFormatado = conteudo.replace(/\n\s*\n/g, '\n').replace('Copiar', '');
+        // Copia o conteúdo formatado para a área de transferência
+        const tempInput = document.createElement('textarea');
+        tempInput.style.position = 'absolute';
+        tempInput.style.left = '-9999px';
+        tempInput.value = conteudoFormatado;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
+        }
+
+        function contarTarefasPorStatus(atividades) {
+        let contagem = {
+            todo: 0,
+            doing: 0,
+            done: 0,
+            Backlog:0
+        };
+        atividades.forEach(atividade => {
+            if (atividade.status === 'todo') {
+                contagem.todo += 1;
+            } else if (atividade.status === 'doing') {
+                contagem.doing += 1;
+            } else if (atividade.status === 'done') {
+                contagem.done += 1;
+            } else if (atividade.status === 'Backlog') {
+                    contagem.Backlog += 1;
+            }
+
+        });
+        return contagem;
+        }
+
+        function atualizarContagemTarefas() {
+        const contagem = contarTarefasPorStatus(atividades);
+        document.getElementById('todo-count').textContent = contagem.todo;
+        document.getElementById('doing-count').textContent = contagem.doing;
+        document.getElementById('done-count').textContent = contagem.done;
+        document.getElementById('Backlog-count').textContent = contagem.Backlog;
+        }
+        carregarAtividades();
+        adicionarEventoEdicao();
+        adicionarEventoCriacao();
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,468 @@
+/* Estilos Gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Título Principal */
+h1 {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 24px;
+    margin: 0;
+}
+
+
+/* Botões Globais */
+button {
+    padding: 10px 15px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+/* Botão para Adicionar Nova Tarefa */
+#add-task-btn {
+    display: flex;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#add-task-btn:hover {
+    background-color: #0056b3;
+}
+
+/* Botão para Ocultar o Botão Excluir */
+#toggle-delete-btn {
+    display: flex;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #b30089;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#toggle-delete-btn:hover {
+    background-color: #a00079;
+}
+
+/* Botão para Ocultar o Botão copiar */
+#toggle-copy-btn {
+    display: flex;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Layout do Kanban */
+.kanban-board {
+    display: flex;
+    padding: 10px;
+    gap: 10px; /* Espaço entre as colunas */
+    align-items: baseline;
+}
+
+/* Estilos das Colunas do Kanban */
+.kanban-column {
+    background-color: lightgray; 
+    border-radius: 8px;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
+    flex: 1; /* Colunas ocupam o mesmo espaço */
+    /* padding: 5px 5px; */
+    border: 1px solid #ddd;
+    text-align: center;
+
+}
+
+/* Títulos das Colunas do Kanban com Cores Diferentes */
+h2 {
+    margin: 0px;
+    font-size: 18px;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 8px;
+    font-family: 'calibri';
+}
+
+#Backlog h2 {
+    background-color: #6f7779;
+    color: #fff;
+}
+
+#todo h2 {
+    background-color:#1bb3bc; /* Azul para 'To Do' */
+    color: #fff;
+}
+
+#doing h2 {
+    background-color: #FFCC33; /* Laranja para 'Doing' */
+    color: #fff;
+}
+
+#done h2 {
+    background-color: #2ecc71; /* Verde para 'Done' */
+    color: #fff;
+}
+
+
+/* Estilos de Arraste */
+.kanban-column .over {
+    background-color: #f1f1f1; /* Alteração de fundo ao arrastar para uma coluna */
+}
+
+
+ #search-input {
+    padding: 5px;
+    width: 100%;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: left;
+
+    margin: 5px;
+ }
+
+
+/* Modal de Criação e Edição */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Fundo escurecido */
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background-color: white;
+    padding: 10px;
+    border-radius: 8px;
+    width: 450px;
+}
+
+.modal-content h3 {
+    margin: auto;
+    text-align: center ;
+}
+
+/* Estilos para Inputs e Textareas nos Modais */
+.modal-content input, .modal-content textarea {
+    width: 95%;
+    padding: 5px;
+    margin: 7px 0px;
+}
+.modal-content label {
+    margin-bottom: 10px;
+    border-color: #000000;
+}
+/* Botões nos Modais */
+.modal-content button {
+    margin-top: 10px;
+    margin-left: 30%;
+    color: white;
+    background-color: #28a745;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    gap: 50px; /* Espaço entre os botões */
+}
+
+/* Botão de Cancelar nos Modais */
+
+
+
+.modal-content .cancel-btn {
+    background-color: #dc3545; /* Vermelho parac o botão de cancelamento */
+    margin-left: 20px;
+}
+
+.delete-btn {
+    display: flex;
+    margin: 5px 0px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    align-items: flex-start;
+}
+
+/* Estilo do botão Copiar */
+.copy-btn {
+    background-color: #4CAF50; /* Cor verde */
+    color: white; /* Cor do texto */
+    border: none; /* Remove borda */
+    text-align: center; /* Centraliza o texto */
+    text-decoration: none; /* Remove sublinhado */
+    display: inline-block; /* Exibe como elemento inline */
+    font-size: 14px; /* Tamanho da fonte */
+    border-radius: 4px; /* Bordas arredondadas */
+    cursor: pointer; /* Mostra ícone de mão ao passar o mouse */
+    transition: background-color 0.3s ease; /* Animação de transição suave */
+ }
+ .copy-btn:hover {
+    background-color: #45a049; /* Cor mais escura ao passar o mouse */
+ }
+
+/* Estilo para o cabeçalho do modal que será arrastado */
+.modal-header {
+    background-color: gray;
+    border-radius: 8px;
+    margin: 5px;
+    /* color: white; */
+    /* padding: 10px; */
+    cursor: move;  /* Define que o cursor indica que a área é arrastável */
+
+ }
+ /* Ajustes no modal para posicionamento absoluto */
+ .modal-content {
+    position: absolute;
+    top: 50%;  /* Ajuste o valor inicial como necessário */
+    left: 50%; /* Ajuste o valor inicial como necessário */
+    transform: translate(-50%, -50%); /* Mantém o modal centralizado inicialmente */
+ }
+
+/* Animação ao Criar um Novo Card */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.5s ease-in;
+}
+
+/* Estilo da Mensagem de Sucesso */
+.mensagem-sucesso {
+    position: fixed;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #2ecc71; /* Verde de sucesso */
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    opacity: 0;
+    animation: fadeIn 0.3s ease-in forwards;
+}
+
+/* Layout do Cabeçalho com Botões */
+.header {
+    display: flex;
+    justify-content: center; /* Centraliza o título */
+    align-items: center; /* Alinha verticalmente no centro */
+    position: relative; /* Para controle dos botões */
+    padding: 10px;
+    background-color: #575454;
+    color: white;
+    text-align: center;
+    
+}
+
+select {
+    width: 440px;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    /* border: 1px solid #000000; */
+    font-size: 16px;
+}
+
+
+/* Botões no Cabeçalho */
+.buttons {
+    position: absolute;
+    left: 0; /* Alinha os botões à esquerda */
+    display: flex;
+    gap: 20px; /* Espaço entre os botões */
+    padding-left: 10px;
+    align-items: baseline;
+}
+button:hover {
+    background-color: #004085; /* Um azul mais escuro no hover */
+}
+
+/* Responsividade para Telas Menores */
+@media (max-width: 768px) {
+    .kanban-board {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .kanban-column {
+        width: 100%; /* Colunas ocupam 100% da largura em telas pequenas */
+    }
+}
+
+/* Cores de fundo suaves para as colunas */
+#Backlog {
+    background-color: #fff; 
+    /* border: 1px solid #a00079; */
+}
+
+#todo {
+    background-color: #fff;
+}
+
+#doing {
+    background-color: #fff; 
+    /* border: 1px solid #ffb74d; */
+}
+
+#waiting {
+    background-color: #fff; 
+    /* border: 1px solid #ffb74d; */
+}
+
+#done {
+    background-color: #fff; 
+    /* border: 1px solid #66bb6a; */
+}
+
+
+/* Melhor feedback visual ao arrastar */
+.card.dragging {
+    transform: scale(1.05);  /* Aumenta levemente o card enquanto é arrastado */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);  /* Adiciona sombra */
+}
+
+
+/* Estilo para Tarefas Vencidas */
+.card.doing {
+    background-color: #fddf89;
+    
+}
+/* Estilo para Tarefas Com Prazo OK */
+.card.done {
+    background-color: #c6ecd3;  /* Verde */
+}
+
+/* Estilo para Tarefas que Expiram Hoje */
+.card.todo {
+    background-color:#9bf7ff;
+}
+
+.card.Backlog {
+    background-color: #c3cacd;
+}
+
+/* Títulos das colunas */
+.kanban-column h2 {
+    text-align: center;
+    border-radius: 8px;
+    color: #ffffff;
+}
+
+/* Estilo geral dos cards */
+.card {
+
+    /* border: 1px dashed #000; Bordas pontilhadas ou tracejadas */
+    border-radius: 10px; /* Bordas arredondadas */
+    padding: 5PX;
+    margin: 5px;
+
+    /* width: 250px; */
+ }
+
+ /* Título e descrição dentro do card */
+ .card h2 {
+    text-align: center;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+ }
+ .card p {
+    font-size: 14PX;
+    text-align: left;
+    flex-wrap: wrap;
+    margin: 0px;
+
+ }
+
+ /* Efeito hover para o card */
+ .card:hover {
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2); /* Sombra mais intensa ao passar o mouse */
+    transform: scale(1.05); /* Aumenta levemente o tamanho do card */
+    transition: all 0.3s ease; /* Transição suave */
+ }
+
+.modal-content :checked {
+    background-color: #f1f1f1;
+}
+
+#edit-important, #create-important {
+    background-color: #742b61;
+    width: 50px;
+    height: 15px;
+    display: block;
+    text-align: center;
+    
+}
+
+ol {
+    padding-left: 25px;
+    margin: 5px 0px;
+}
+
+#important {
+    border: 1px dashed red;
+}
+
+.card li {
+    margin: 1;
+    padding: 1;
+    text-align: left;
+}
+
+.card ul {
+    margin:  5px 0px;
+    padding: 0px 0px 0px 5px;
+    font-size: 14px;
+}
+
+.bullet-edit-input {
+    padding: 4px;
+    font-size: 14px;
+    width: 80%;
+    margin: 4px 0;
+ }
+ .modal-content ul {
+    padding: 5px 10px 5px 25px;
+    margin: 5px 0px;
+
+    font-size: 14px;
+ }
+
+ .bullet-text {
+    padding: 4px;
+    font-size: 14px;
+    margin: 4px 0;
+ }
+ .bullet-item {
+    display:list-item;
+    align-items: center;
+    margin: 5px 0;
+ }
